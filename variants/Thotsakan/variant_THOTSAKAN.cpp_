@@ -1,0 +1,132 @@
+/*
+ *******************************************************************************
+ * Copyright (c) 2019-2021, STMicroelectronics
+ * All rights reserved.
+ *
+ * This software component is licensed by ST under BSD 3-Clause license,
+ * the "License"; You may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at:
+ *                        opensource.org/licenses/BSD-3-Clause
+ *
+ *******************************************************************************
+ */
+#if defined(ARDUINO_THOTSAKAN)
+
+#include "pins_arduino.h"
+
+// Pin number
+const PinName digitalPin[] = {
+  PB_11, // D0
+  PB_12, // D1
+  PB_13, // D2
+  PB_14, // D3
+  PB_15, // D4
+  PC_10, // D5
+  PC_11, // D6
+  PB_3,  // D7
+  PB_4,  // D8
+  PB_5,  // D9
+  PC_13, // D10
+  PC_0,  // D11/S1
+  PC_1,  // D12/S2
+  PC_2,  // D13/S3
+  PC_3,  // D14/S4
+  PA_0,  // D15/A0
+  PA_1,  // D16/A1
+  PA_2,  // D17/A2
+  PA_3,  // D18/A3
+  PA_4,  // D19/A4
+  PA_5,  // D20/A5
+  PA_6,  // D21/A6
+  PA_7,  // D22/A7
+  PC_4,  // D23/A8
+  PC_5,  // D24/A9
+  PB_2,  // D25/KNOB/SW_OK
+  PC_6,  // D26/M1_A
+  PC_7,  // D27/M1_B
+  PA_11, // D28/M1_PWM
+  PC_8,  // D29/M2_A
+  PC_9,  // D30/M2_B
+  PA_12, // D31/M2_PWM
+  PA_15, // D32/I2C1_SCL
+  PB_9,  // D33/I2C1_SDA
+};
+
+// Analog (Ax) pin number array
+const uint32_t analogInputPin[] = {
+  15, // A0
+  16, // A1
+  17, // A2
+  18, // A3
+  19, // A4
+  20, // A5
+  21, // A6
+  22, // A7
+  23, // A8
+  24, // A9
+  25  // A10
+};
+
+// ----------------------------------------------------------------------------
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+/**
+  * @brief  System Clock Configuration
+  * @param  None
+  * @retval None
+  */
+WEAK void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {};
+
+  /** Configure the main internal regulator output voltage
+  */
+  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSI48;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;
+  RCC_OscInitStruct.PLL.PLLN = 85;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV4;
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+    Error_Handler();
+  }
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+                                | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+    Error_Handler();
+  }
+  /** Initializes the peripherals clocks
+  */
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
+    Error_Handler();
+  }
+}
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
+#endif /* ARDUINO_NUCLEO_G431KB */
