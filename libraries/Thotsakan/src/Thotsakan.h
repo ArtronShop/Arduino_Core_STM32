@@ -22,6 +22,9 @@ Adafruit_SH1106G oled(128, 64, &Wire, -1);
 
 #include <Servo.h>
 
+#define SERVO_MIN_US (500)
+#define SERVO_MAX_US (2500)
+
 #define SV1pin PC0
 #define SV2pin PC1
 #define SV3pin PC2
@@ -429,7 +432,7 @@ void servo(char n, signed int angle) {
     myServo[n].detach();
   } else {
     if (!myServo[n].attached()) {
-      myServo[n].attach(servo_pins[n]);
+      myServo[n].attach(servo_pins[n], SERVO_MIN_US, SERVO_MAX_US);
     }
     myServo[n].write(angle);
   }
