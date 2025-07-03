@@ -182,6 +182,8 @@ int SW_OK(void) {
 void waitSW_OK(void) {
   while (!SW_OK()) ;
   while (SW_OK()) ;
+  oled.clear();
+  oled.display();
 }
 
 void SW_OK_press(void)  // backward compatible function

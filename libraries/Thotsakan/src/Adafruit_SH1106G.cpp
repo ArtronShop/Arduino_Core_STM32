@@ -173,5 +173,9 @@ bool Adafruit_SH1106G::begin(uint8_t addr, bool reset) {
   delay(100);                     // 100ms delay recommended
   oled_command(SH110X_DISPLAYON); // 0xaf
 
+  delay(50);
+
+  this->display();
+
   return true; // Success
 }
